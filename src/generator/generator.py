@@ -1,5 +1,7 @@
 import constants
 import csv
+import matplotlib.pyplot as plt
+from matplotlib.ticker import StrMethodFormatter
 
 
 def parse_csv():
@@ -68,6 +70,19 @@ def calculate_team_values(team, cl, vl, ovl):
     }
 
 
+def plot_graph(teams):
+    plt.gca().yaxis.set_major_formatter(StrMethodFormatter('{x:,.0f}')) 
+    plt.axvline(100, color='#D3D3D3')
+    plt.axhline(100, color='#D3D3D3')
+    for team in teams:
+        plt.scatter(team["wrc_plus"], team["fip_minus"], s=5*team["wrc_plus"],
+                    c="#000000",
+                    marker=r"$ {} $".format(team["team_name"]), edgecolors='none')
+    # plt.xlabel("WRC+")
+    # plt.ylabel("FIP-")
+    plt.show()
+
+
 def main():
     teams = parse_csv()
     chad_league, virgin_league, total_league = calculate_league_totals(teams)
@@ -75,7 +90,7 @@ def main():
     for team in teams:
         calc_teams.append(calculate_team_values(
             team, chad_league, virgin_league, total_league))
-    print(calc_teams)
+    plot_graph(calc_teams)
 
 
 if __name__ == "__main__":
